@@ -29,98 +29,14 @@ module.exports = function(RED) {
     });
 
 
-    // download
-    function AmazonS3InNode(n) {
-        RED.nodes.createNode(this,n);
-        this.awsConfig = RED.nodes.getNode(n.aws);
-        // eu-west-1||us-east-1||us-west-1||us-west-2||eu-central-1||ap-northeast-1||ap-northeast-2||ap-southeast-1||ap-southeast-2||sa-east-1
-        this.region = n.region || "s3.cn-east-2.jdcloud-oss.com";
-        this.bucket = n.bucket;
-        this.filepattern = n.filepattern || "";
-        var node = this;
-        var AWS = this.awsConfig ? this.awsConfig.AWS : null;
-
-        if (!AWS) {
-            node.warn(RED._("aws.warn.missing-credentials"));
-            return;
-        }
-        var s3 = new AWS.S3({"endpoint": node.region});
-        node.status({fill:"blue",shape:"dot",text:"aws.status.initializing"});
-        s3.listObjects({ Bucket: node.bucket }, function(err, data) {
-            if (err) {
-                node.error(RED._("aws.error.failed-to-fetch", {err:err}));
-                node.status({fill:"red",shape:"ring",text:"aws.status.error"});
-                return;
-            }
-            var contents = node.filterContents(data.Contents);
-            node.state = contents.map(function (e) { return e.Key; });
-            node.status({});
-            node.on("input", function(msg) {
-                node.status({fill:"blue",shape:"dot",text:"aws.status.checking-for-changes"});
-                s3.listObjects({ Bucket: node.bucket }, function(err, data) {
-                    if (err) {
-                        node.error(RED._("aws.error.failed-to-fetch", {err:err}),msg);
-                        node.status({});
-                        return;
-                    }
-                    node.status({});
-                    var newContents = node.filterContents(data.Contents);
-                    var seen = {};
-                    var i;
-                    msg.bucket = node.bucket;
-                    for (i = 0; i < node.state.length; i++) {
-                        seen[node.state[i]] = true;
-                    }
-                    for (i = 0; i < newContents.length; i++) {
-                        var file = newContents[i].Key;
-                        if (seen[file]) {
-                            delete seen[file];
-                        } else {
-                            msg.payload = file;
-                            msg.file = file.substring(file.lastIndexOf('/')+1);
-                            msg.event = 'add';
-                            msg.data = newContents[i];
-                            node.send(msg);
-                        }
-                    }
-                    for (var f in seen) {
-                        if (seen.hasOwnProperty(f)) {
-                            msg.payload = f;
-                            msg.file = f.substring(f.lastIndexOf('/')+1);
-                            msg.event = 'delete';
-                            // msg.data intentionally null
-                            node.send(msg);
-                        }
-                    }
-                    node.state = newContents.map(function (e) {return e.Key;});
-                });
-            });
-            var interval = setInterval(function() {
-                node.emit("input", {});
-            }, 900000); // 15 minutes
-            node.on("close", function() {
-                if (interval !== null) {
-                    clearInterval(interval);
-                }
-            });
-        });
-    }
-
-    AmazonS3InNode.prototype.filterContents = function(contents) {
-        var node = this;
-        return node.filepattern ? contents.filter(function (e) {
-            return minimatch(e.Key, node.filepattern);
-        }) : contents;
-    };
-
-    RED.nodes.registerType("jdcloud download", AmazonS3InNode);
-
-    // function AmazonS3QueryNode(n) {
+    // // download
+    // function AmazonS3InNode(n) {
     //     RED.nodes.createNode(this,n);
     //     this.awsConfig = RED.nodes.getNode(n.aws);
+    //     // eu-west-1||us-east-1||us-west-1||us-west-2||eu-central-1||ap-northeast-1||ap-northeast-2||ap-southeast-1||ap-southeast-2||sa-east-1
     //     this.region = n.region || "s3.cn-east-2.jdcloud-oss.com";
     //     this.bucket = n.bucket;
-    //     this.filename = n.filename || "";
+    //     this.filepattern = n.filepattern || "";
     //     var node = this;
     //     var AWS = this.awsConfig ? this.awsConfig.AWS : null;
 
@@ -129,38 +45,122 @@ module.exports = function(RED) {
     //         return;
     //     }
     //     var s3 = new AWS.S3({"endpoint": node.region});
-    //     node.on("input", function(msg) {
-    //         var bucket = node.bucket || msg.bucket;
-    //         if (bucket === "") {
-    //             node.error(RED._("aws.error.no-bucket-specified"),msg);
+    //     node.status({fill:"blue",shape:"dot",text:"aws.status.initializing"});
+    //     s3.listObjects({ Bucket: node.bucket }, function(err, data) {
+    //         if (err) {
+    //             node.error(RED._("aws.error.failed-to-fetch", {err:err}));
+    //             node.status({fill:"red",shape:"ring",text:"aws.status.error"});
     //             return;
     //         }
-    //         var filename = node.filename || msg.filename;
-    //         if (filename === "") {
-    //             node.warn("No filename");
-    //             node.error(RED._("aws.error.no-filename-specified"),msg);
-    //             return;
-    //         }
-    //         msg.bucket = bucket;
-    //         msg.filename = filename;
-    //         node.status({fill:"blue",shape:"dot",text:"aws.status.downloading"});
-    //         s3.getObject({
-    //             Bucket: bucket,
-    //             Key: filename,
-    //         }, function(err, data) {
-    //             if (err) {
-    //                 node.warn(err);
-    //                 node.error(RED._("aws.error.download-failed",{err:err.toString()}),msg);
-    //                 return;
-    //             } else {
-    //                 msg.payload = data.Body;
+    //         var contents = node.filterContents(data.Contents);
+    //         node.state = contents.map(function (e) { return e.Key; });
+    //         node.status({});
+    //         node.on("input", function(msg) {
+    //             node.status({fill:"blue",shape:"dot",text:"aws.status.checking-for-changes"});
+    //             s3.listObjects({ Bucket: node.bucket }, function(err, data) {
+    //                 if (err) {
+    //                     node.error(RED._("aws.error.failed-to-fetch", {err:err}),msg);
+    //                     node.status({});
+    //                     return;
+    //                 }
+    //                 node.status({});
+    //                 var newContents = node.filterContents(data.Contents);
+    //                 var seen = {};
+    //                 var i;
+    //                 msg.bucket = node.bucket;
+    //                 for (i = 0; i < node.state.length; i++) {
+    //                     seen[node.state[i]] = true;
+    //                 }
+    //                 for (i = 0; i < newContents.length; i++) {
+    //                     var file = newContents[i].Key;
+    //                     if (seen[file]) {
+    //                         delete seen[file];
+    //                     } else {
+    //                         msg.payload = file;
+    //                         msg.file = file.substring(file.lastIndexOf('/')+1);
+    //                         msg.event = 'add';
+    //                         msg.data = newContents[i];
+    //                         node.send(msg);
+    //                     }
+    //                 }
+    //                 for (var f in seen) {
+    //                     if (seen.hasOwnProperty(f)) {
+    //                         msg.payload = f;
+    //                         msg.file = f.substring(f.lastIndexOf('/')+1);
+    //                         msg.event = 'delete';
+    //                         // msg.data intentionally null
+    //                         node.send(msg);
+    //                     }
+    //                 }
+    //                 node.state = newContents.map(function (e) {return e.Key;});
+    //             });
+    //         });
+    //         var interval = setInterval(function() {
+    //             node.emit("input", {});
+    //         }, 900000); // 15 minutes
+    //         node.on("close", function() {
+    //             if (interval !== null) {
+    //                 clearInterval(interval);
     //             }
-    //             node.status({});
-    //             node.send(msg);
     //         });
     //     });
     // }
-    // RED.nodes.registerType("jdcloud", AmazonS3QueryNode);
+
+    // AmazonS3InNode.prototype.filterContents = function(contents) {
+    //     var node = this;
+    //     return node.filepattern ? contents.filter(function (e) {
+    //         return minimatch(e.Key, node.filepattern);
+    //     }) : contents;
+    // };
+
+    // RED.nodes.registerType("jdcloud download", AmazonS3InNode);
+
+    function AmazonS3QueryNode(n) {
+        RED.nodes.createNode(this,n);
+        this.awsConfig = RED.nodes.getNode(n.aws);
+        this.region = n.region || "s3.cn-east-2.jdcloud-oss.com";
+        this.bucket = n.bucket;
+        this.filename = n.filename || "";
+        var node = this;
+        var AWS = this.awsConfig ? this.awsConfig.AWS : null;
+
+        if (!AWS) {
+            node.warn(RED._("aws.warn.missing-credentials"));
+            return;
+        }
+        var s3 = new AWS.S3({"endpoint": node.region});
+        node.on("input", function(msg) {
+            var bucket = node.bucket || msg.bucket;
+            if (bucket === "") {
+                node.error(RED._("aws.error.no-bucket-specified"),msg);
+                return;
+            }
+            var filename = node.filename || msg.filename;
+            if (filename === "") {
+                node.warn("No filename");
+                node.error(RED._("aws.error.no-filename-specified"),msg);
+                return;
+            }
+            msg.bucket = bucket;
+            msg.filename = filename;
+            node.status({fill:"blue",shape:"dot",text:"aws.status.downloading"});
+            s3.getObject({
+                Bucket: bucket,
+                Key: filename,
+            }, function(err, data) {
+                if (err) {
+                    node.warn(err);
+                    node.error(RED._("aws.error.download-failed",{err:err.toString()}),msg);
+                    return;
+                } else {
+                    msg.payload = data.Body;
+                }
+                node.status({});
+                node.send(msg);
+            });
+        });
+    }
+    RED.nodes.registerType("jdcloud download", AmazonS3QueryNode);
 
     
     // upload
