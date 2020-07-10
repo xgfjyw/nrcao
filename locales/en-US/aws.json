@@ -1,7 +1,7 @@
 {
-    "aws": {
+    "aliyun": {
         "label": {
-            "aws": "AWS",
+            "aliyun": "Config",
             "bucket": "Bucket",
             "pattern": "Filename Pattern",
             "name": "Name",

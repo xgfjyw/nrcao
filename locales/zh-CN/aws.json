@@ -1,7 +1,7 @@
 {
-    "aws": {
+    "aliyun": {
         "label": {
-            "aws": "京东云",
+            "aliyun": "京东云",
             "bucket": "储存桶",
             "pattern": "文件类型",
             "name": "名称",
