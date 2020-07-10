@@ -118,7 +118,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
 
         var node = this;
-        node.config = RED.nodes.getNode(config.aws);
+        node.config = RED.nodes.getNode(config.aliyun);
         node.region = config.region; // || "s3.cn-east-2.jdcloud-oss.com";
         node.bucket = config.bucket;
         node.filename = config.filename || "";
