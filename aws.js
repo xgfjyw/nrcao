@@ -5,15 +5,14 @@ module.exports = function(RED) {
     var minimatch = require("minimatch");
 
     // config
-    function AWSNode(n) {
-        RED.nodes.createNode(this,n);
-        
-        //console.log("ID:"+this.credentials.accesskeyid+"--key:"+this.credentials.secretaccesskey)
+    function AliyunNode(config) {
+        RED.nodes.createNode(this, config);
         
         if (this.credentials &&
-            this.credentials.accesskeyid && this.credentials.secretaccesskey) {
+            this.credentials.accesskeyid && 
+            this.credentials.secretaccesskey) {
+                
             this.AWS = require("aws-sdk");
-            console.log("AWS: "+this.AWS.config)
             this.AWS.config.update({
                 accessKeyId: this.credentials.accesskeyid,
                 secretAccessKey: this.credentials.secretaccesskey,
@@ -21,9 +20,9 @@ module.exports = function(RED) {
         }
     }
 
-    RED.nodes.registerType("aws-config",AWSNode,{
+    RED.nodes.registerType("aliyun-config", AliyunNode,{
         credentials: {
-            accesskeyid: { type:"text" },
+            accesskeyid: { type: "text" },
             secretaccesskey: { type: "password" }
         }
     });
@@ -115,52 +114,56 @@ module.exports = function(RED) {
 
     // RED.nodes.registerType("jdcloud download", AmazonS3InNode);
 
-    function AmazonS3QueryNode(n) {
-        RED.nodes.createNode(this,n);
-        this.awsConfig = RED.nodes.getNode(n.aws);
-        this.region = n.region || "s3.cn-east-2.jdcloud-oss.com";
-        this.bucket = n.bucket;
-        this.filename = n.filename || "";
+    function AliyunOssGetObjectNode(config) {
+        RED.nodes.createNode(this, config);
+
         var node = this;
-        var AWS = this.awsConfig ? this.awsConfig.AWS : null;
+        node.config = RED.nodes.getNode(config.aws);
+        node.region = config.region; // || "s3.cn-east-2.jdcloud-oss.com";
+        node.bucket = config.bucket;
+        node.filename = config.filename || "";
+        
+        var AWS = node.config ? node.config.AWS : null;
 
         if (!AWS) {
             node.warn(RED._("aws.warn.missing-credentials"));
             return;
         }
         var s3 = new AWS.S3({"endpoint": node.region});
+
         node.on("input", function(msg) {
             var bucket = node.bucket || msg.bucket;
             if (bucket === "") {
-                node.error(RED._("aws.error.no-bucket-specified"),msg);
+                node.error(RED._("aws.error.no-bucket-specified"), msg);
                 return;
             }
             var filename = node.filename || msg.filename;
             if (filename === "") {
                 node.warn("No filename");
-                node.error(RED._("aws.error.no-filename-specified"),msg);
+                node.error(RED._("aws.error.no-filename-specified"), msg);
                 return;
             }
+
             msg.bucket = bucket;
             msg.filename = filename;
-            node.status({fill:"blue",shape:"dot",text:"aws.status.downloading"});
+            node.status({fill:"blue", shape:"dot", text:"aws.status.downloading"});
             s3.getObject({
                 Bucket: bucket,
                 Key: filename,
             }, function(err, data) {
                 if (err) {
                     node.warn(err);
-                    node.error(RED._("aws.error.download-failed",{err:err.toString()}),msg);
+                    node.error(RED._("aws.error.download-failed", {err:err.toString()}), msg);
                     return;
-                } else {
-                    msg.payload = data.Body;
                 }
+                
+                msg.payload = data.Body;
                 node.status({});
                 node.send(msg);
             });
         });
     }
-    RED.nodes.registerType("jdcloud download", AmazonS3QueryNode);
+    RED.nodes.registerType("aliyun oss download", AliyunOssGetObjectNode);
 
     
     // upload
