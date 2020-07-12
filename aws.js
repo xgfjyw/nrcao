@@ -28,7 +28,7 @@ module.exports = function(RED) {
   });
 
 
-  // // download
+  // // watch
   // function AmazonS3InNode(n) {
   //     RED.nodes.createNode(this,n);
   //     this.awsConfig = RED.nodes.getNode(n.aws);
@@ -114,6 +114,7 @@ module.exports = function(RED) {
 
   // RED.nodes.registerType("jdcloud download", AmazonS3InNode);
 
+  //download
   function AliyunOssGetObjectNode(config) {
     RED.nodes.createNode(this, config);
 
@@ -124,9 +125,8 @@ module.exports = function(RED) {
     node.filename = config.filename || '';
 
     const AWS = node.config ? node.config.AWS : null;
-
     if (!AWS) {
-      node.warn(RED._('aws.warn.missing-credentials'));
+      node.warn(RED._('aliyun.warn.missing-credentials'));
       return;
     }
     const s3 = new AWS.S3({'endpoint': node.region});
@@ -134,26 +134,26 @@ module.exports = function(RED) {
     node.on('input', function(msg) {
       const bucket = node.bucket || msg.bucket;
       if (bucket === '') {
-        node.error(RED._('aws.error.no-bucket-specified'), msg);
+        node.error(RED._('aliyun.error.no-bucket-specified'), msg);
         return;
       }
       const filename = node.filename || msg.filename;
       if (filename === '') {
         node.warn('No filename');
-        node.error(RED._('aws.error.no-filename-specified'), msg);
+        node.error(RED._('aliyun.error.no-filename-specified'), msg);
         return;
       }
 
       msg.bucket = bucket;
       msg.filename = filename;
-      node.status({fill: 'blue', shape: 'dot', text: 'aws.status.downloading'});
+      node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.downloading'});
       s3.getObject({
         Bucket: bucket,
         Key: filename,
       }, function(err, data) {
         if (err) {
           node.warn(err);
-          node.error(RED._('aws.error.download-failed', {err: err.toString()}), msg);
+          node.error(RED._('aliyun.error.download-failed', {err: err.toString()}), msg);
           return;
         }
 
@@ -166,78 +166,80 @@ module.exports = function(RED) {
   RED.nodes.registerType('aliyun oss download', AliyunOssGetObjectNode);
 
 
-//   // upload
-//   function AmazonS3OutNode(n) {
-//     RED.nodes.createNode(this, n);
-//     this.awsConfig = RED.nodes.getNode(n.aws);
-//     this.region = n.region || 's3.cn-east-2.jdcloud-oss.com';
-//     this.bucket = n.bucket;
-//     this.filename = n.filename || '';
-//     this.localFilename = n.localFilename || '';
-//     const node = this;
-//     const AWS = this.awsConfig ? this.awsConfig.AWS : null;
+  // upload
+  function AliyunOssPutObjectNode(config) {
+    RED.nodes.createNode(this, config);
 
-//     if (!AWS) {
-//       node.warn(RED._('aws.warn.missing-credentials'));
-//       return;
-//     }
-//     if (AWS) {
-//       const s3 = new AWS.S3({'endpoint': node.region});
-//       node.status({fill: 'blue', shape: 'dot', text: 'aws.status.checking-credentials'});
-//       s3.listObjects({Bucket: node.bucket}, function(err) {
-//         if (err) {
-//           node.warn(err);
-//           node.error(RED._('aws.error.aws-s3-error', {err: err}));
-//           node.status({fill: 'red', shape: 'ring', text: 'aws.status.error'});
-//           return;
-//         }
-//         node.status({});
-//         node.on('input', function(msg) {
-//           const bucket = node.bucket || msg.bucket;
-//           if (bucket === '') {
-//             node.error(RED._('aws.error.no-bucket-specified'), msg);
-//             return;
-//           }
-//           const filename = node.filename || msg.filename;
-//           if (filename === '') {
-//             node.error(RED._('aws.error.no-filename-specified'), msg);
-//             return;
-//           }
-//           const localFilename = node.localFilename || msg.localFilename;
-//           if (localFilename) {
-//             // TODO: use chunked upload for large files
-//             node.status({fill: 'blue', shape: 'dot', text: 'aws.status.uploading'});
-//             const stream = fs.createReadStream(localFilename);
-//             s3.putObject({
-//               Bucket: bucket,
-//               Body: stream,
-//               Key: filename,
-//             }, function(err) {
-//               if (err) {
-//                 node.error(err.toString(), msg);
-//                 node.status({fill: 'red', shape: 'ring', text: 'aws.status.failed'});
-//                 return;
-//               }
-//               node.status({});
-//             });
-//           } else if (typeof msg.payload !== 'undefined') {
-//             node.status({fill: 'blue', shape: 'dot', text: 'aws.status.uploading'});
-//             s3.putObject({
-//               Bucket: bucket,
-//               Body: RED.util.ensureBuffer(msg.payload),
-//               Key: filename,
-//             }, function(err) {
-//               if (err) {
-//                 node.error(err.toString(), msg);
-//                 node.status({fill: 'red', shape: 'ring', text: 'aws.status.failed'});
-//                 return;
-//               }
-//               node.status({});
-//             });
-//           }
-//         });
-//       });
-//     }
-//   }
-//   RED.nodes.registerType('jdcloud upload', AmazonS3OutNode);
+    const node = this;
+    node.config = RED.nodes.getNode(n.aliyun);
+    node.region = n.region; // || 's3.cn-east-2.jdcloud-oss.com';
+    node.bucket = n.bucket;
+    node.filename = n.filename || '';
+    node.localFilename = n.localFilename || '';
+    
+    const AWS = this.config ? this.config.AWS : null;
+    if (!AWS) {
+      node.warn(RED._('aliyun.warn.missing-credentials'));
+      return;
+    }
+
+    const s3 = new AWS.S3({'endpoint': node.region});
+    node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.checking-credentials'});
+    s3.listObjects({Bucket: node.bucket}, function(err) {
+      if (err) {
+        node.warn(err);
+        node.error(RED._('aliyun.error.aws-s3-error', {err: err}));
+        node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.error'});
+        return;
+      }
+      node.status({});
+      node.on('input', function(msg) {
+        const bucket = node.bucket || msg.bucket;
+        if (bucket === '') {
+          node.error(RED._('aliyun.error.no-bucket-specified'), msg);
+          return;
+        }
+        const filename = node.filename || msg.filename;
+        if (filename === '') {
+          node.error(RED._('aliyun.error.no-filename-specified'), msg);
+          return;
+        }
+
+        const localFilename = node.localFilename || msg.localFilename;
+        if (localFilename) {
+          // TODO: use chunked upload for large files
+          node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
+          const stream = fs.createReadStream(localFilename);
+          s3.putObject({
+            Bucket: bucket,
+            Body: stream,
+            Key: filename,
+          }, function(err) {
+            if (err) {
+              node.error(err.toString(), msg);
+              node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
+              return;
+            }
+            node.status({});
+          });
+        }
+        // else if (typeof msg.payload !== 'undefined') {
+        //   node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
+        //   s3.putObject({
+        //     Bucket: bucket,
+        //     Body: RED.util.ensureBuffer(msg.payload),
+        //     Key: filename,
+        //   }, function(err) {
+        //     if (err) {
+        //       node.error(err.toString(), msg);
+        //       node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
+        //       return;
+        //     }
+        //     node.status({});
+        //   });
+        // }
+      });
+    });
+  }
+  RED.nodes.registerType('aliyun oss upload', AliyunOssPutObjectNode);
 };

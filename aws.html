@@ -22,55 +22,6 @@
   limitations under the License.
 -->
 
-<!-- <script type="text/x-red" data-template-name="jdcloud c_bucket">
-    <div class="form-row">
-        <label for="node-input-aws"><i class="fa fa-user"></i> <span data-i18n="aliyun.label.aws"></span></label>
-        <input type="text" id="node-input-aws">
-    </div>
-    <div class="form-row">
-        <label for="node-input-bucket"><i class="fa fa-folder"></i> <span data-i18n="aliyun.label.bucket"></span></label>
-        <input type="text" id="node-input-bucket" data-i18n="[placeholder]aliyun.placeholder.bucket">
-    </div>
-    <div class="form-row">
-        <label for="node-input-region"><i class="fa fa-tag"></i> <span data-i18n="aliyun.label.region"></span></label>
-        <select type="text" id="node-input-region" style="width:72%;">
-          <option selected="selected" value="s3.cn-north-1.jdcloud-oss.com">华北-北京</option>
-          <option value="s3.cn-south-1.jdcloud-oss.com">华南-广州</option>
-          <option value="s3.cn-east-2.jdcloud-oss.com">华东-上海</option>
-          <option value="s3.cn-east-1.jdcloud-oss.com">华东-宿迁</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="aliyun.label.name"></span></label>
-        <input type="text" id="node-input-name" data-i18n="[placeholder]aliyun.placeholder.name">
-    </div>
-</script>
-
-<script type="text/x-red" data-help-name="jdcloud c_bucket">
-    <p>京东云储存桶创建节点，msg.bucket属性定义储存桶的名称。<ul><li>1.长度必须在3-63字符之间</li> <li>2.名称仅能由小写字母、数字、中划线(-)组成</li> <li>3.名称必须以小写字母或数字开头和结尾</li></ul>
-    创建成功后会输出msg.bucket定义创建成功的储存桶的名称,失败流将会终止</p>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('jdcloud c_bucket',{
-        category: 'storage-input',
-        color:"#C0DEED",
-        paletteLabel: '创建储存桶',
-        defaults: {
-            aws: {type:"aws-config",required:true},
-            bucket: {required:true},
-            region: {value:"", required:true},
-            name: {value:""},
-        },
-        inputs:1,
-        outputs:1,
-        icon: "amazon.png",
-        label: function() {
-            return this.name ? this.name : "创建储存桶";
-        }
-    });
-</script> -->
-
 <!-- <script type="text/x-red" data-template-name="jdcloud in">
     <div class="form-row">
         <label for="node-input-aws"><i class="fa fa-user"></i> <span data-i18n="aliyun.label.aws"></span></label>
@@ -177,10 +128,10 @@
     });
 </script>
 
-<!-- <script type="text/x-red" data-template-name="jdcloud upload">
+<script type="text/x-red" data-template-name="aliyun oss upload">
     <div class="form-row">
-        <label for="node-input-aws"><i class="fa fa-user"></i> <span data-i18n="aliyun.label.aws"></span></label>
-        <input type="text" id="node-input-aws">
+        <label for="node-input-config"><i class="fa fa-user"></i> <span data-i18n="aliyun.label.config"></span></label>
+        <input type="text" id="node-input-config">
     </div>
     <div class="form-row">
         <label for="node-input-bucket"><i class="fa fa-folder"></i> <span data-i18n="aliyun.label.bucket"></span></label>
@@ -206,17 +157,17 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="jdcloud upload">
+<script type="text/x-red" data-help-name="aliyun oss upload">
     <p>京东云OSS输出节点。将内容上传到京东云OSS存储桶。可以在节点存储桶属性或msg.bucket属性中指定存储桶名称。 京东云OSS上的文件名来自节点目标文件名属性或msg.filename属性。内容来自节点的本地文件路径属性，msg.localFilename属性或msg.payload属性。</p>
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('jdcloud upload',{
+    RED.nodes.registerType('aliyun oss upload',{
         category: 'storage-output',
         color:"#C0DEED",
-        paletteLabel: '京东云上传',
+        paletteLabel: '阿里云上传',
         defaults: {
-            aws: {type:"aws-config",required:true},
+            config: {type:"aliyun config",required:true},
             bucket: {required:true},
             filename: {value:""},
             localFilename: {value:""},
@@ -229,10 +180,10 @@
         align: "right",
         label: function() {
             if(this.name) return this.name
-            return this.bucket ? "京东云上传 "+this.bucket : "京东云上传";
+            return this.bucket ? "阿里云上传 "+this.bucket : "阿里云上传";
         }
     });
-</script> -->
+</script>
 
 <script type="text/x-red" data-template-name="aliyun config">
     <div class="form-row">
