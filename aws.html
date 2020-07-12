@@ -165,7 +165,7 @@
     RED.nodes.registerType('aliyun oss upload',{
         category: 'storage-output',
         color:"#C0DEED",
-        paletteLabel: '阿里云上传',
+        paletteLabel: '阿里云oss-上传',
         defaults: {
             config: {type:"aliyun config",required:true},
             bucket: {required:true},
@@ -180,7 +180,7 @@
         align: "right",
         label: function() {
             if(this.name) return this.name
-            return this.bucket ? "阿里云上传 "+this.bucket : "阿里云上传";
+            return this.bucket ? "阿里云oss "+this.bucket : "阿里云oss";
         }
     });
 </script>
