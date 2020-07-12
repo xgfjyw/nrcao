@@ -127,8 +127,8 @@
 
 <script type="text/x-red" data-template-name="aliyun oss download">
     <div class="form-row">
-        <label for="node-input-aws"><i class="fa fa-user"></i> <span data-i18n="aliyun.label.aliyun"></span></label>
-        <input type="text" id="node-input-aws">
+        <label for="node-input-aliyun"><i class="fa fa-user"></i> <span data-i18n="aliyun.label.aliyun"></span></label>
+        <input type="text" id="node-input-aliyun">
     </div>
     <div class="form-row">
         <label for="node-input-bucket"><i class="fa fa-folder"></i> <span data-i18n="aliyun.label.bucket"></span></label>
@@ -160,7 +160,7 @@
         color:"#C0DEED",
         paletteLabel: '阿里云oss-下载',
         defaults: {
-            aliyun: {type:"aliyun config", required:true},
+            aliyun: {type:"aliyun-config", required:true},
             bucket: {required:true},
             filename: {value: ""},
             region: {value:"", required:true},
@@ -251,7 +251,7 @@
 
 <script type="text/javascript">
 (function() {
-    RED.nodes.registerType('aliyun config',{
+    RED.nodes.registerType('aliyun-config',{
         category: 'config',
         paletteLabel: '阿里云配置',
         defaults: {},
