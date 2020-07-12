@@ -20,7 +20,7 @@ module.exports = function(RED) {
     }
   }
 
-  RED.nodes.registerType('aliyun-config', AliyunNode, {
+  RED.nodes.registerType('aliyun config', AliyunNode, {
     credentials: {
       accesskeyid: {type: 'text'},
       secretaccesskey: {type: 'password'},
