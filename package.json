@@ -5,21 +5,21 @@
     "url": "http://www.fineemb.com"
   },
   "dependencies": {
-    "aws-sdk": "^2.712.0",
+    "ali-oss": "^6.10.0",
     "minimatch": "^3.0.4"
   },
   "deprecated": false,
-  "description": "京东云OSS对象存储节点",
+  "description": "阿里云OSS对象存储节点",
   "keywords": [
     "node-red",
-    "jdcloud",
+    "aliyun",
     "oss"
   ],
   "license": "Apache-2.0",
-  "name": "node-red-contrib-jdcloud",
+  "name": "node-red-contrib-aliyun-oss",
   "node-red": {
     "nodes": {
-      "jdcloud": "aws.js"
+      "aliyun-oss": "oss.js"
     }
   },
   "repository": {
