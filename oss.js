@@ -70,9 +70,9 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
 
     const node = this;
-    node.config = RED.nodes.getNode(n.aliyun);
-    node.filename = n.filename || '';
-    node.localFilename = n.localFilename || '';
+    node.config = RED.nodes.getNode(config.aliyun);
+    node.filename = config.filename || '';
+    node.localFilename = config.localFilename || '';
     
     const client = this.config ? this.config.client : null;
     if (!client) {
