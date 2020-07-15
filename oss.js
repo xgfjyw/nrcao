@@ -14,8 +14,11 @@ module.exports = function(RED) {
       region: config.region,
       accessKeyId: config.accessKeyId,
       accessKeySecret: config.accessKeySecret,
-      bucket: config.bucket,
+      bucket: config.bucket
     });
+    if (!this.client) {
+      node.error(RED._('aliyun.warn.missing-credentials'));
+    }
   }
   RED.nodes.registerType('aliyun oss config', AliyunOssConfigNode);
 
