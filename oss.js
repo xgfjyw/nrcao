@@ -38,11 +38,6 @@ module.exports = function(RED) {
     }
 
     node.on('input', function(msg) {
-      // const bucket = node.bucket || msg.bucket;
-      // if (bucket === '') {
-      //   node.error(RED._('aliyun.error.no-bucket-specified'), msg);
-      //   return;
-      // }
       const filename = node.filename || msg.filename;
       if (filename === '') {
         node.warn('No filename');
@@ -80,22 +75,7 @@ module.exports = function(RED) {
       return;
     }
 
-    // const s3 = new OSS.S3({'endpoint': node.region});
-    node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.checking-credentials'});
-    // s3.listObjects({Bucket: node.bucket}, function(err) {
-    //   if (err) {
-    //     node.warn(err);
-    //     node.error(RED._('aliyun.error.aws-s3-error', {err: err}));
-    //     node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.error'});
-    //     return;
-    //   }
-    //   node.status({});
     node.on('input', function(msg) {
-      // const bucket = node.bucket || msg.bucket;
-      // if (bucket === '') {
-      //   node.error(RED._('aliyun.error.no-bucket-specified'), msg);
-      //   return;
-      // }
       const filename = node.filename || msg.filename;
       if (filename === '') {
         node.error(RED._('aliyun.error.no-filename-specified'), msg);
