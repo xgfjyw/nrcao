@@ -118,8 +118,8 @@
 
 <script type="text/x-red" data-template-name="aliyun oss upload">
     <div class="form-row">
-        <label for="node-input-config"><i class="fa fa-user"></i><span data-i18n="aliyun.label.config"></span></label>
-        <input type="text" id="node-input-config">
+        <label for="node-input-aliyun"><i class="fa fa-user"></i><span data-i18n="aliyun.label.config"></span></label>
+        <input type="text" id="node-input-aliyun">
     </div>
     <div class="form-row node-input-filename">
          <label for="node-input-filename"><i class="fa fa-file"></i> <span data-i18n="aliyun.label.filename"></span></label>
@@ -145,7 +145,7 @@
         color:"#C0DEED",
         paletteLabel: '阿里云oss-上传',
         defaults: {
-            config: {type:"aliyun oss config",required:true},
+            aliyun: {type:"aliyun oss config",required:true},
             filename: {value:""},
             localFilename: {value:""},
             name: {value:""}
