@@ -202,7 +202,7 @@
             region: {value:"", required:true},
             accesskeyid: {type:"text", required:true},
             secretaccesskey: {type: "password", required:true},
-            bucket: {required:true},
+            bucket: {type:"text", required:true},
         },
         label: function() {
             return this.accesskeyid ? "阿里云oss配置 - "+this.accesskeyid : "阿里云oss配置";

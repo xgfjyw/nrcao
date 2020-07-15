@@ -9,17 +9,13 @@ module.exports = function(RED) {
   function AliyunOssConfigNode(config) {
     RED.nodes.createNode(this, config);
 
-    if (this.credentials &&
-            this.credentials.accesskeyid &&
-            this.credentials.secretaccesskey) {
-      this.OSS = require('ali-oss');
-      this.client = new this.OSS({
-        region: config.region,
-        accessKeyId: config.accessKeyId,
-        accessKeySecret: config.accessKeySecret,
-        bucket: config.bucket,
-      });
-    }
+    this.OSS = require('ali-oss');
+    this.client = new this.OSS({
+      region: config.region,
+      accessKeyId: config.accessKeyId,
+      accessKeySecret: config.accessKeySecret,
+      bucket: config.bucket,
+    });
   }
   RED.nodes.registerType('aliyun oss config', AliyunOssConfigNode);
 
