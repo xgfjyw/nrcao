@@ -12,8 +12,8 @@ module.exports = function(RED) {
     this.OSS = require('ali-oss');
     this.client = new this.OSS({
       region: config.region,
-      accessKeyId: config.accessKeyId,
-      accessKeySecret: config.accessKeySecret,
+      accessKeyId: config.accesskeyid,
+      accessKeySecret: config.secretaccesskey,
       bucket: config.bucket
     });
     if (!this.client) {
