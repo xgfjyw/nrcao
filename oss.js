@@ -159,8 +159,7 @@ module.exports = function(RED) {
             node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
           });
         }
-      }
-      
+      });
     });
   }
   RED.nodes.registerType('aliyun oss upload', AliyunOssPutObjectNode);
