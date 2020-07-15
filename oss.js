@@ -28,11 +28,15 @@ module.exports = function(RED) {
     node.config = RED.nodes.getNode(config.aliyun);
     node.filename = config.filename || '';
 
+    node.status({text: '1'});
+
     const client = node.config ? node.config.client : null;
     if (!client) {
       node.warn(RED._('aliyun.warn.missing-credentials'));
       return;
     }
+
+    node.status({text: '2'});
 
     node.on('input', function(msg) {
       // const bucket = node.bucket || msg.bucket;
@@ -46,10 +50,12 @@ module.exports = function(RED) {
         node.error(RED._('aliyun.error.no-filename-specified'), msg);
         return;
       }
+      node.status({text: '3'});
 
       msg.filename = filename;
       node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.downloading'});
       client.get(filename).then((data)=> {
+        node.status({text: '4'});
         msg.payload = data.Body;
         node.status({});
         node.send(msg);
