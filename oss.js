@@ -150,7 +150,7 @@ module.exports = function(RED) {
             node.send(msg);
           }).catch((err) => {
             node.error(err.toString(), msg);
-            node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
+            node.status({fill: 'green', shape: 'ring', text: 'aliyun.status.failed'});
           });
         // update payload body
         } else if (typeof msg.payload !== 'undefined') {
@@ -162,7 +162,7 @@ module.exports = function(RED) {
             node.send(msg);
           }).catch((err) => {
             node.error(err.toString(), msg);
-            node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
+            node.status({fill: 'orange', shape: 'ring', text: 'aliyun.status.failed'});
           });
         }
       });
