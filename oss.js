@@ -109,7 +109,7 @@ module.exports = function(RED) {
       client.head(filename).then((data) => {
         node.status({text: '3'});
         // file exists, append from position = length
-        position = data.res.headers['content-length']
+        var position = data.res.headers['content-length']
         if (localFilename) {
           node.status({text: '4'});
           // TODO: use chunked upload for large files
