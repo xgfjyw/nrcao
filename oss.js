@@ -111,22 +111,14 @@ module.exports = function(RED) {
           // TODO: use chunked upload for large files
           node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
           const stream = fs.createReadStream(localFilename);
-          client.append(filename, stream, {position: position}).then((data) => {
-            msg.payload = {code: data.status, msg: data.code || ''};
-            node.status({});
-            node.send(msg);
-          }).catch((err) => {
+          client.append(filename, stream, {position: position}).catch((err) => {
             node.error(err.toString(), msg);
             node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
           });
         // update payload body
         } else if (typeof msg.payload !== 'undefined') {
           node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
-          client.append(filename, RED.util.ensureBuffer(msg.payload), {position: position}).then((result) => {
-            msg.payload = {code: data.status, msg: data.code || ''};
-            node.status({});
-            node.send(msg);
-          }).catch((err) => {
+          client.append(filename, RED.util.ensureBuffer(msg.payload), {position: position}).catch((err) => {
             node.error(err.toString(), msg);
             node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
           });
@@ -138,22 +130,14 @@ module.exports = function(RED) {
           // TODO: use chunked upload for large files
           node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
           const stream = fs.createReadStream(localFilename);
-          client.append(filename, stream).then((data) => {
-            msg.payload = {code: data.status, msg: data.code || ''};
-            node.status({});
-            node.send(msg);
-          }).catch((err) => {
+          client.append(filename, stream).catch((err) => {
             node.error(err.toString(), msg);
             node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
           });
         // update payload body
         } else if (typeof msg.payload !== 'undefined') {
           node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
-          client.append(filename, RED.util.ensureBuffer(msg.payload)).then((data) => {
-            msg.payload = {code: data.status, msg: data.code || ''};
-            node.status({});
-            node.send(msg);
-          }).catch((err) => {
+          client.append(filename, RED.util.ensureBuffer(msg.payload)).catch((err) => {
             node.error(err.toString(), msg);
             node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
           });
