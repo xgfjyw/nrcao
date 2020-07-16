@@ -101,7 +101,11 @@ module.exports = function(RED) {
         // update payload body
         } else if (typeof msg.payload !== 'undefined') {
           node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
-          client.append(filename, RED.util.ensureBuffer(msg.payload), {position: position}).catch((err) => {
+          client.append(filename, RED.util.ensureBuffer(msg.payload), {position: position})
+          .then(() => {
+            node.status({});
+          })
+          .catch((err) => {
             node.error(err.toString(), msg);
             node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
           });
@@ -124,7 +128,11 @@ module.exports = function(RED) {
         // update payload body
         } else if (typeof msg.payload !== 'undefined') {
           node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
-          client.append(filename, RED.util.ensureBuffer(msg.payload)).catch((err) => {
+          client.append(filename, RED.util.ensureBuffer(msg.payload))
+          .then(() => {
+            node.status({});
+          })
+          .catch((err) => {
             node.error(err.toString(), msg);
             node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
           });
