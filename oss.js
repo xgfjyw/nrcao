@@ -107,7 +107,7 @@ module.exports = function(RED) {
           });
         }
 
-      }).catch((err) => {
+      }).catch(() => {
         // file not exists
         if (localFilename) {
           // TODO: use chunked upload for large files
