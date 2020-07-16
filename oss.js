@@ -83,7 +83,6 @@ module.exports = function(RED) {
       }
       const localFilename = node.localFilename || msg.localFilename;
 
-
       client.head(filename).then((data) => {
         // file exists, append from position = length
         var position = data.res.headers['content-length']
@@ -91,7 +90,11 @@ module.exports = function(RED) {
           // TODO: use chunked upload for large files
           node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
           const stream = fs.createReadStream(localFilename);
-          client.append(filename, stream, {position: position}).catch((err) => {
+          client.append(filename, stream, {position: position})
+          .then(() => {
+            node.status({});
+          })
+          .catch((err) => {
             node.error(err.toString(), msg);
             node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
           });
@@ -110,7 +113,11 @@ module.exports = function(RED) {
           // TODO: use chunked upload for large files
           node.status({fill: 'blue', shape: 'dot', text: 'aliyun.status.uploading'});
           const stream = fs.createReadStream(localFilename);
-          client.append(filename, stream).catch((err) => {
+          client.append(filename, stream)
+          .then(() => {
+            node.status({});
+          })
+          .catch((err) => {
             node.error(err.toString(), msg);
             node.status({fill: 'red', shape: 'ring', text: 'aliyun.status.failed'});
           });
