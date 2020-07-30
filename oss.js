@@ -93,6 +93,9 @@ module.exports = function(RED) {
           client.append(filename, stream, {position: position})
           .then(() => {
             node.status({});
+            msg.payload = { "msg": "ok" };
+            node.send(msg);
+            node.done();
           })
           .catch((err) => {
             node.error(err.toString(), msg);
@@ -104,6 +107,9 @@ module.exports = function(RED) {
           client.append(filename, RED.util.ensureBuffer(msg.payload), {position: position})
           .then(() => {
             node.status({});
+            msg.payload = { "msg": "ok" };
+            node.send(msg);
+            node.done();
           })
           .catch((err) => {
             node.error(err.toString(), msg);
@@ -120,6 +126,9 @@ module.exports = function(RED) {
           client.append(filename, stream)
           .then(() => {
             node.status({});
+            msg.payload = { "msg": "ok" };
+            node.send(msg);
+            node.done();
           })
           .catch((err) => {
             node.error(err.toString(), msg);
@@ -131,6 +140,9 @@ module.exports = function(RED) {
           client.append(filename, RED.util.ensureBuffer(msg.payload))
           .then(() => {
             node.status({});
+            msg.payload = { "msg": "ok" };
+            node.send(msg);
+            node.done();
           })
           .catch((err) => {
             node.error(err.toString(), msg);
