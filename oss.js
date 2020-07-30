@@ -95,7 +95,6 @@ module.exports = function(RED) {
             node.status({});
             msg.payload = { "msg": "ok" };
             node.send(msg);
-            node.done();
           })
           .catch((err) => {
             node.error(err.toString(), msg);
@@ -109,7 +108,6 @@ module.exports = function(RED) {
             node.status({});
             msg.payload = { "msg": "ok" };
             node.send(msg);
-            node.done();
           })
           .catch((err) => {
             node.error(err.toString(), msg);
@@ -128,7 +126,6 @@ module.exports = function(RED) {
             node.status({});
             msg.payload = { "msg": "ok" };
             node.send(msg);
-            node.done();
           })
           .catch((err) => {
             node.error(err.toString(), msg);
@@ -142,7 +139,6 @@ module.exports = function(RED) {
             node.status({});
             msg.payload = { "msg": "ok" };
             node.send(msg);
-            node.done();
           })
           .catch((err) => {
             node.error(err.toString(), msg);
