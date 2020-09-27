@@ -7,6 +7,7 @@
             "name": "名称",
             "filename": "目标文件名",
             "region": "地域",
+            "internal": "内网访问",
             "local": "本地文件路径",
             "keyid": "AccessKeyID",
             "secret": "Secret Access Key"
@@ -17,6 +18,7 @@
             "name": "名称",
             "filename": "目标文件名",
             "region": "地域",
+            "internal": "内网访问",
             "local": "本地文件路径"
         },
         "tip": {

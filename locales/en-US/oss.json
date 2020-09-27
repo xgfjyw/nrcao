@@ -7,6 +7,7 @@
             "name": "Name",
             "filename": "Filename",
             "region": "Region",
+            "internal": "Internal",
             "local": "Local Filename",
             "keyid": "AccessKeyID",
             "secret": "Secret Access Key"
@@ -17,6 +18,7 @@
             "name": "Name",
             "filename": "Filename",
             "region": "Region",
+            "internal": "Internal",
             "local": "Local Filename"
         },
         "tip": {

@@ -171,6 +171,14 @@
         </select>
     </div>
     <div class="form-row">
+        <label for="node-config-input-internal"><i class="fa fa-tag"></i>
+        <span data-i18n="aliyun.label.internal"></span></label>
+        <select type="text" id="node-config-input-internal" style="width:72%;">
+          <option selected="selected" value="true">true</option>
+          <option selected="selected" value="false">false</option>
+        </select>
+    </div>
+    <div class="form-row">
         <label for="node-config-input-accesskeyid">
         <i class="fa fa-bookmark"></i>
         <span data-i18n="aliyun.label.keyid"></span></label>
@@ -200,6 +208,7 @@
         paletteLabel: '阿里云oss配置',
         defaults: {
             region: {value:"", required:true},
+            internal: {value:true, required:true},
             accesskeyid: {type:"text", required:true},
             secretaccesskey: {type: "password", required:true},
             bucket: {type:"text", required:true},

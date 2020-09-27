@@ -12,9 +12,11 @@ module.exports = function(RED) {
     this.OSS = require('ali-oss');
     this.client = new this.OSS({
       region: config.region,
+      internal: config.internal,
       accessKeyId: config.accesskeyid,
       accessKeySecret: config.secretaccesskey,
-      bucket: config.bucket
+      bucket: config.bucket,
+      timeout: 60
     });
     if (!this.client) {
       node.error(RED._('aliyun.warn.missing-credentials'));
